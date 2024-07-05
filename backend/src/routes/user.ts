@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
-import { sign } from "hono/jwt";
+import { sign, verify } from "hono/jwt";
 import { signinInput, signupInput } from "@mrigakshi/common";
 
 const userRouter = new Hono<{
@@ -16,13 +16,12 @@ userRouter.post("/signup", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
-  console.log(body)
 
   const { success } = signupInput.safeParse(body);
-	if (!success) {
-		c.status(400);
-		return c.json({ error: "invalid input" });
-	}
+  if (!success) {
+    c.status(400);
+    return c.json({ error: "invalid input" });
+  }
 
   try {
     const user = await prisma.user.create({
@@ -35,6 +34,7 @@ userRouter.post("/signup", async (c) => {
     const jwt = await sign(
       {
         id: user.id,
+        firstLetter: user.name?.charAt(0) ?? "A",
       },
       c.env.JWT_SECRET
     );
@@ -53,10 +53,10 @@ userRouter.post("/signin", async (c) => {
   const body = await c.req.json();
 
   const { success } = signinInput.safeParse(body);
-	if (!success) {
-		c.status(400);
-		return c.json({ error: "invalid input" });
-	}
+  if (!success) {
+    c.status(400);
+    return c.json({ error: "invalid input" });
+  }
 
   try {
     const user = await prisma.user.findUnique({
@@ -75,6 +75,19 @@ userRouter.post("/signin", async (c) => {
     return c.json({ jwt });
   } catch (e) {
     c.status(411);
+  }
+});
+
+userRouter.get("/getUser", async (c) => {
+  try {
+    const authHeader = c.req.header("authorization") || "";
+    const user = await verify(authHeader, c.env.JWT_SECRET);
+    return c.json({
+      firstLetter: user.firstLetter,
+    });
+  } catch (e) {
+    c.status(403);
+    return c.json({ message: "user not found" });
   }
 });
 

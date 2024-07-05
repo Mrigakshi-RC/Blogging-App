@@ -19,6 +19,15 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       );
       const jwt = response.data.jwt;
       localStorage.setItem("token", jwt);
+
+      const userResponse = await axios.get(
+        `${BACKEND_URL}/api/v1/user/getUser`,
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
+      localStorage.setItem("firstLetter", userResponse.data.firstLetter);
+
       navigate("/blogs");
     } catch (e) {
       alert("Error while signing up");

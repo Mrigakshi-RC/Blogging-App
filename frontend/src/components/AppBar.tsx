@@ -2,6 +2,7 @@ import { Avatar } from "./BlogCard";
 import { Link } from "react-router-dom";
 
 const AppBar = () => {
+  const firstLetter = localStorage.getItem("firstLetter") ?? "A";
   return (
     <div className="border-b flex justify-between px-10 py-4">
       <Link to="/blogs" className="flex flex-col justify-center cursor-pointer">
@@ -16,7 +17,7 @@ const AppBar = () => {
             New
           </button>
         </Link>
-        <Avatar name="mrigakshi" size={"big"} />
+        <Avatar name={firstLetter} size={"big"} />
       </div>
     </div>
   );
