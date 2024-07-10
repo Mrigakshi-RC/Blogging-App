@@ -1,3 +1,3 @@
 ## Things to be Added/Fixed
-- Deleting/editing Blog feature
+- Editing Blog feature
 - Logging out
