@@ -2,6 +2,7 @@ import BlogCard from "../components/BlogCard";
 import AppBar from "../components/AppBar";
 import useBlogs from "../hooks";
 import { BlogSkeleton } from "../components/BlogSkeleton";
+import { formatDate } from "../utils/utilFunctions";
 
 const Blogs = () => {
   const { loading, blogs } = useBlogs();
@@ -33,7 +34,7 @@ const Blogs = () => {
               authorName={blog.author.name || "Anonymous"}
               title={blog.title}
               content={blog.content}
-              publishedDate="2nd Feb 24"
+              publishedDate={blog.date ? formatDate(blog.date) : "2nd Feb 24"}
               id={blog.id}
             />
           ))}

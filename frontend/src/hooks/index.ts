@@ -9,6 +9,7 @@ export interface Blog {
   author: {
     name: string;
   };
+  date?: Date;
 }
 const useBlogs = () => {
   const [loading, setLoading] = useState(true);
