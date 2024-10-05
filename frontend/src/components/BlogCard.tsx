@@ -20,7 +20,7 @@ const BlogCard = ({
   return (
     <div className="flex items-center">
       <Link to={`/blog/${id}`}>
-        <div className="p-4 border-b border-slate-200 pb-4 w-screen max-w-screen-md ">
+        <div className="p-4 border-b border-slate-200 pb-4 w-[90vw] max-w-screen-md ">
           <div className="flex">
             <div className="flex justify-center flex-col">
               <Avatar name={authorName} />
